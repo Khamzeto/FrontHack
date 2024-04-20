@@ -6,6 +6,9 @@
   height: 40vmin;
   pointer-events: none;
 }
+.title {
+  font-family: 'Actay', sans-serif !important;
+}
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
@@ -38,4 +41,150 @@
 .crop_cont {
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 99999;
+}
+@font-face {
+  font-family: 'Actay Wide';
+  src: url('./fonts/ActayWide-BoldItalic.otf') format('opentype');
+  font-weight: bold;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Actay';
+  src: url('./fonts/Actay-Regular.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Actay';
+  src: url('./fonts/Actay-RegularItalic.otf') format('opentype');
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Actay Condensed';
+  src: url('./fonts/ActayCondensed-Thin.otf') format('opentype');
+  font-weight: 100;
+}
+
+@font-face {
+  font-family: 'Actay Condensed';
+  src: url('./fonts/ActayCondensed-ThinItalic.otf') format('opentype');
+  font-weight: 100;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Actay Wide';
+  src: url('./fonts/ActayWide-Bold.otf') format('opentype');
+  font-weight: bold;
+}
+@media only screen and (max-width: 420px) {
+  body {
+    max-width: 767px;
+    overflow-x: hidden !important;
+  }
+  .tit-nav {
+    font-family: Manrope;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 100%;
+    max-width: 10%;
+    margin-left: 0% !important;
+  }
+  .title-main {
+    max-width: 80%;
+    margin-left: 5%;
+    margin-top: -68%;
+  }
+  .cont-main {
+    margin-top: -68%;
+    margin-bottom: -39%;
+  }
+  .title {
+    font-family: 'Actay Wide';
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 100%;
+  }
+  .desc {
+    color: #5a5a5a;
+    font-family: Manrope;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 110%;
+    max-width: 85%;
+    margin-left: 5%;
+    text-align: left;
+  }
+  .search {
+    display: none;
+  }
+  .auth-nav {
+    display: flex;
+    width: 60px;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+  .reg-nav {
+    display: flex;
+    width: 120px;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+  .cont-nav {
+    max-width: 200px;
+  }
+  .nav-text {
+    display: none;
+  }
+  .img-che {
+    display: block !important;
+  }
+  .img-chebig {
+    display: none;
+  }
+  .cont-gl {
+    max-width: 1200px;
+  }
+  .text-univer {
+    font-size: 12px;
+  }
+  .text-univer1 {
+    font-size: 30px;
+  }
+  .burger {
+    display: flex !important;
+    min-width: 50px;
+  }
+  .recom {
+    margin-left: 5%;
+  }
+  .noacc {
+    width: 150%;
+  }
+  .cont-reg {
+    max-width: 80%;
+  }
+  .cont-reg1 {
+    width: 100%;
+  }
+  .cont-reg2 {
+    width: 100%;
+  }
+  .inputmob {
+    width: 110%;
+  }
+  .butmob {
+    max-width: 100%;
+  }
+  .accept {
+    font-size: 60%;
+  }
 }

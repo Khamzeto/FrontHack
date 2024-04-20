@@ -49,14 +49,14 @@ function AuthPage({ setAddModal }) {
       <NavbarAuth />
       <div className="h-[100%] w-[100%]  flex justify-center items-center  ">
         <div className="relative w-full ">
-          <div className="max-w-[560px] h-[500px] my-[8%] p-[30px] mx-8 rounded-[15px] border border-teal-700 flex-col gap-5 inline-flex flex-shrink">
+          <div className="max-w-[100%] h-[500px] my-[8%] p-[30px] mx-8 rounded-[15px] border border-teal-700 flex-col gap-5 inline-flex flex-shrink">
             <div class="flex-col justify-start items-start gap-5 flex">
-              <div class="w-[506px] justify-start items-start gap-5 inline-flex">
+              <div class="w-[100%] justify-start items-start gap-5 inline-flex">
                 <div class="grow shrink basis-0 flex-col justify-start items-start gap-2.5 inline-flex">
                   <div class="self-stretch text-black text-[25px] font-bold font-['Manrope'] leading-7">
                     Войти{' '}
                   </div>
-                  <div class="w-[501px]">
+                  <div class="w-[100%]">
                     <span className="text-black text-[15px] font-normal font-['Manrope'] leading-[17.25px]">
                       Нет аккаунта?{' '}
                     </span>
@@ -73,7 +73,7 @@ function AuthPage({ setAddModal }) {
               </div>
             </div>
             <div class="flex-col justify-start items-start gap-5 flex">
-              <div class="flex-col justify-start items-start gap-5 flex">
+              <div class="w-[100%] flex-col justify-start items-start gap-5 flex">
                 <div class="text-black text-[25px] font-bold font-['Manrope'] leading-7">
                   Email
                 </div>
@@ -82,10 +82,10 @@ function AuthPage({ setAddModal }) {
                   name="email"
                   onChange={handleChange}
                   value={formData.email}
-                  class="w-[501px] px-5 py-[15px] bg-gray-50 rounded-[10px] border border-zinc-400 justify-start items-center gap-2.5 inline-flex"
+                  class="w-[100%] px-5 py-[15px] bg-gray-50 rounded-[10px] border border-zinc-400 justify-start items-center gap-2.5 inline-flex"
                 ></input>
               </div>
-              <div class="flex-col justify-start items-start gap-5 flex">
+              <div class=" w-[100%] flex-col justify-start items-start gap-5 flex">
                 <div class="text-black text-[25px] font-bold font-['Manrope'] leading-7">
                   Пароль
                 </div>
@@ -94,7 +94,7 @@ function AuthPage({ setAddModal }) {
                   name="password"
                   onChange={handleChange}
                   value={formData.password}
-                  class="w-[501px] px-5 py-[15px] bg-gray-50 rounded-[10px] border border-zinc-400 justify-start items-center gap-2.5 inline-flex"
+                  class="w-[100%] px-5 py-[15px] bg-gray-50 rounded-[10px] border border-zinc-400 justify-start items-center gap-2.5 inline-flex"
                 ></input>
               </div>
             </div>
@@ -103,7 +103,7 @@ function AuthPage({ setAddModal }) {
             </button>
             <button
               onClick={handleSubmit}
-              class="w-[501px] px-5 py-[15px] bg-teal-700 rounded-[10px] justify-center items-center gap-2.5 inline-flex"
+              class="w-[501px] noacc px-5 py-[15px] bg-teal-700 rounded-[10px] justify-center items-center gap-2.5 inline-flex"
             >
               <div class="text-center text-white text-[15px] font-normal font-['Manrope'] leading-[17.25px]">
                 Создать аккаунт
