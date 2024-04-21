@@ -10,3 +10,6 @@ body {
   background-color: #f5f7fb;
   overflow-x: hidden !important;
 }
+a.hover\:underline:hover {
+  text-decoration: none; /* Убираем подчеркивание */
+}

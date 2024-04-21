@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import getCroppedImg64 from '../getImage64';
 import Cropper from 'react-easy-crop';
 
 function AddModal({ setAddModal }) {
+  const userId = localStorage.getItem('userId');
+
   const [rotation, setRotation] = useState(0);
   const [imageSrc, setImageSrc] = useState(null);
   const [cover, setCover] = useState('');
@@ -121,14 +123,9 @@ function AddModal({ setAddModal }) {
   const [formData, setFormData] = useState({
     fullName: '',
     direction: '',
-    age: '',
-    averageGrade: '',
-    diploma: '',
-    jobSearchStatus: '',
-    biography: '',
-    researchWorks: '',
-    achievements: '',
+    faculty: '',
   });
+  console.log(formData);
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -142,25 +139,17 @@ function AddModal({ setAddModal }) {
       const formSend = new FormData();
       formSend.append('avatar', cover);
       formSend.append('name', formData.fullName);
-      console.log(formSend.fullName);
 
-      formSend.append('direction', formData.direction);
-      formSend.append('age', formData.age);
-      formSend.append('grade', formData.averageGrade);
-      formSend.append('diploma', formData.diploma);
-      formSend.append('biography', formData.biography);
-      formSend.append('work', formData.researchWorks);
-      formSend.append('achievements', formData.achievements);
-      formSend.append('searchJob', formData.jobSearchStatus);
+      formSend.append('directions', formData.direction);
 
-      // Загрузка скиллов
-      formSend.append('skills', JSON.stringify(skills));
+      formSend.append('faculty', formData.faculty);
 
-      const response = await fetch('http://localhost:4000/service/create', {
-        method: 'POST',
+      const response = await fetch(`http://localhost:4007/auth/${userId}/update_data`, {
+        method: 'PUT',
         body: formSend,
       });
-
+      setAddModal(false);
+      window.location.reload();
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message);
@@ -173,11 +162,42 @@ function AddModal({ setAddModal }) {
     }
   };
 
+  const token = localStorage.getItem('token');
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`http://localhost:4007/auth/${userId}/get_data`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch data from port 4007');
+        }
+
+        const jsonData = await response.json();
+
+        setCover(jsonData.avatar);
+        setFormData({
+          fullName: jsonData.name,
+          direction: jsonData.directions,
+          faculty: jsonData.faculty,
+        });
+        console.log(jsonData.avatar);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <>
       {imageSrc && avatarModal && (
-        <div className="h-[100%] z-[9999]  ">
-          <div className="w-[100%]  h-[1200px] crop_cont  absolute left-0">
+        <div className="h-[100%] z-[999999]  ">
+          <div className="w-[100%] z-[99999] h-[1200px] crop_cont  absolute left-0">
             <div
               className="max-w-[500px] rounded-[24px] h-[600px] top-[5%] absolute left-0 bg-white z-[9999]"
               style={{ left: '50%', transform: 'translateX(-50%)' }}
@@ -252,16 +272,16 @@ function AddModal({ setAddModal }) {
       )}
 
       <div
-        className="App min-h-[100%]   w-[100%] absolute left-0 right-0  mx-auto "
+        className="App min-h-[100%]  z-[99]  w-[100%] absolute left-0 right-0  mx-auto "
         style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
         onClick={() => setAddModal(false)}
       >
         <div
-          className="w-[851px] h-[1090px] my-8 p-[30px] bg-white rounded-[25px]  flex-col justify-start items-start gap-2.5 inline-flex"
+          className="w-[851px] h-[800px] my-8 p-[30px] bg-white rounded-[25px]  flex-col justify-start items-start gap-2.5 inline-flex"
           onClick={e => e.stopPropagation()}
         >
-          <div className="h-[988px] max-w-[790px] flex-col justify-start items-start gap-5 flex">
-            <div className="self-stretch h-[988px] flex-col justify-start items-start gap-[30px] flex">
+          <div className="h-[200px] max-w-[790px] flex-col justify-start items-start gap-5 flex">
+            <div className="self-stretch h-[500px] flex-col justify-start items-start gap-[30px] flex">
               <div className="self-stretch h-[908px] flex-col justify-start items-start gap-[22px] flex">
                 <div className="flex-col justify-center items-center gap-[22px] flex">
                   <div className="self-stretch h-[34px] flex-col justify-start items-start gap-[22px] flex">
@@ -280,7 +300,7 @@ function AddModal({ setAddModal }) {
                     </div>
                   </div>
                   <div className="flex-col justify-center items-center gap-2.5 flex">
-                    {imageSrc ? (
+                    {cover ? (
                       <div className="w-[148px] h-[148px] rounded-[5000px] relative flex-grow">
                         <img
                           className="w-full h-full object-cover rounded-[5000px]"
@@ -295,7 +315,7 @@ function AddModal({ setAddModal }) {
                       </div>
                     )}
 
-                    <div className="px-5 py-2.5 mt-3 bg-blue-500 rounded-[10px] justify-center items-center gap-2.5 inline-flex">
+                    <div className="px-5 py-2.5 mt-3 bg-teal-700  rounded-[10px] justify-center items-center gap-2.5 inline-flex">
                       <label htmlFor="avatarFileInput" style={{ cursor: 'pointer' }}>
                         <div className="text-white text-[15px] font-normal font-['Manrope']">
                           Добавить фото
@@ -313,7 +333,7 @@ function AddModal({ setAddModal }) {
                     />
                   </div>
                 </div>
-                <div className="self-stretch opacity-80 justify-start items-start gap-2.5 inline-flex">
+                <div className="self-stretch text-left opacity-80 justify-start items-start gap-2.5 inline-flex">
                   <div className="grow shrink basis-0 flex-col justify-start items-start gap-2.5 inline-flex">
                     <div className="self-stretch text-black text-xl font-semibold font-['Manrope']">
                       ФИО
@@ -326,184 +346,49 @@ function AddModal({ setAddModal }) {
                       className="self-stretch px-5 py-[15px] bg-slate-50 rounded-[10px] border border-neutral-400 justify-start items-center gap-2.5 inline-flex"
                     />
                   </div>
-                  <div className="grow shrink basis-0 flex-col justify-start items-start gap-2.5 inline-flex">
-                    <div className="self-stretch text-black text-xl font-semibold font-['Manrope']">
-                      Направление
-                    </div>
-                    <select
-                      name="direction"
-                      value={formData.direction}
-                      onChange={handleChange}
-                      className="self-stretch max-w-[500px] px-5 py-[15px] bg-slate-50 rounded-[10px] border border-neutral-400 justify-start items-center gap-2.5 inline-flex"
-                    >
-                      <option value="">Выберите направление</option>
-                      {options.map((option, index) => (
-                        <option key={index} value={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
                 </div>
-                <div className="self-stretch   opacity-80 justify-start items-start gap-2.5 inline-flex">
-                  <div className="grow shrink basis-0 max-w-[180px] flex-col justify-start items-start gap-2.5 inline-flex">
-                    <div className="self-stretch text-black text-xl font-semibold font-['Manrope']">
-                      Возраст
-                    </div>
-                    <input
-                      placeholder="20 лет"
-                      name="age"
-                      value={formData.age}
-                      onChange={handleChange}
-                      className="self-stretch px-5 py-[15px] bg-slate-50 rounded-[10px] border border-neutral-400 justify-start items-center gap-2.5 inline-flex"
-                    />
-                  </div>
-                  <div className="grow shrink  max-w-[180px] basis-0 flex-col justify-start items-start gap-2.5 inline-flex">
-                    <div className="self-stretch text-black text-xl font-semibold font-['Manrope']">
-                      Средняя оценка
-                    </div>
-                    <input
-                      placeholder="4"
-                      name="averageGrade"
-                      value={formData.averageGrade}
-                      onChange={handleChange}
-                      className="self-stretch px-5 py-[15px] bg-slate-50 rounded-[10px] border border-neutral-400 justify-start items-center gap-2.5 inline-flex"
-                    />
-                  </div>
-                  <div className="grow shrink basis-0 max-w-[210px] flex-col justify-start items-start gap-2.5 inline-flex">
-                    <div className="self-stretch text-black text-xl font-semibold font-['Manrope']">
-                      Диплом
-                    </div>
-                    <select
-                      name="diploma"
-                      value={formData.diploma}
-                      onChange={handleChange}
-                      className="self-stretch px-5 py-[15px] bg-slate-50 rounded-[10px] border border-neutral-400 justify-start items-center gap-2.5 inline-flex"
-                    >
-                      <option value="">Красный/обычный</option>
-                      <option value="Красный">Красный</option>
-                      <option value="Обычный">Обычный</option>
-                    </select>
-                  </div>
-                  <div className="grow shrink max-w-[190px] basis-0 flex-col justify-start items-start gap-2.5 inline-flex">
-                    <div className="self-stretch text-black text-xl font-semibold font-['Manrope']">
-                      Поиск работы
-                    </div>
-                    <select
-                      name="jobSearchStatus"
-                      value={formData.jobSearchStatus}
-                      onChange={handleChange}
-                      className="self-stretch px-5 py-[15px] bg-slate-50 rounded-[10px] border border-neutral-400 justify-start items-center gap-2.5 inline-flex"
-                    >
-                      <option value="">Ищет/Не ищет</option>
-                      <option value="Ищет">Ищет</option>
-                      <option value="Не ищет">Не ищет</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="self-stretch h-[87px] flex-col justify-start items-start gap-2.5 flex">
-                  <div className="self-stretch h-[27px] flex-col justify-start items-start gap-1 flex">
-                    <div className="text-black text-xl font-semibold font-['Manrope']">
-                      Краткая биография
-                    </div>
-                  </div>
-                  <input
-                    placeholder="Биография студента"
-                    name="biography"
-                    value={formData.biography}
-                    onChange={handleChange}
-                    className="self-stretch px-5 py-[15px] bg-slate-50 rounded-[10px] border border-neutral-400 justify-start items-start gap-2.5 inline-flex"
-                  />
-                </div>
-                <div className="self-stretch h-[87px] flex-col justify-start items-start gap-2.5 flex">
-                  <div className="self-stretch h-[27px] flex-col justify-start items-start gap-1 flex">
-                    <div className="text-black text-xl font-semibold font-['Manrope']">
-                      Научные и творческие работы
-                    </div>
-                  </div>
-                  <input
-                    placeholder="Данные о работах"
-                    name="researchWorks"
-                    value={formData.researchWorks}
-                    onChange={handleChange}
-                    className="self-stretch px-5 py-[15px] bg-slate-50 rounded-[10px] border border-neutral-400 justify-start items-start gap-2.5 inline-flex"
-                  />
-                </div>
-                <div className="self-stretch h-[87px] flex-col justify-start items-start gap-2.5 flex">
-                  <div className="self-stretch h-[27px] flex-col justify-start items-start gap-1 flex">
-                    <div className="text-black text-xl font-semibold font-['Manrope']">
-                      Достижения
-                    </div>
-                  </div>
-                  <input
-                    placeholder="Данные о достижениях"
-                    name="achievements"
-                    value={formData.achievements}
-                    onChange={handleChange}
-                    className="self-stretch px-5 py-[15px] bg-slate-50 rounded-[10px] border border-neutral-400 justify-start items-start gap-2.5 inline-flex"
-                  />
-                </div>
-                <div className="self-stretch h-[87px] flex-col justify-start items-start gap-2.5 flex">
+                <div className="grow w-[100%] text-left shrink basis-0 flex-col justify-start items-start gap-2.5 inline-flex">
                   <div className="self-stretch text-black text-xl font-semibold font-['Manrope']">
-                    Навыки
+                    Факультет
                   </div>
-                  <div className="self-stretch justify-start items-center gap-2.5 inline-flex">
-                    <div className="grow shrink basis-0 h-[50px] justify-start items-center gap-2.5 flex">
-                      {skills.length > 4 ? (
-                        <>
-                          <div className="px-[30px] py-[15px] bg-blue-500 bg-opacity-20 rounded-[10px] justify-center items-center gap-2.5 flex">
-                            <div className="text-blue-500 text-[15px] font-normal font-['Manrope']">
-                              {skills[0]}
-                            </div>
-                          </div>
-                          <div className="px-[30px] py-[15px] bg-blue-500 bg-opacity-20 rounded-[10px] justify-center items-center gap-2.5 flex">
-                            <div className="text-blue-500 text-[15px] font-normal font-['Manrope']">
-                              {skills[1]}
-                            </div>
-                          </div>
-                          <div className="px-[30px] py-[15px] bg-blue-500 bg-opacity-20 rounded-[10px] justify-center items-center gap-2.5 flex">
-                            <div className="text-blue-500 text-[15px] font-normal font-['Manrope']">
-                              {skills[3]}
-                            </div>
-                          </div>
-                          <div className="px-[30px] py-[15px] bg-blue-500 bg-opacity-20 rounded-[10px] justify-center items-center gap-2.5 flex">
-                            <div className="text-blue-500 text-[15px] font-normal font-['Manrope']">
-                              +{skills.length - 3}
-                            </div>
-                          </div>
-                        </>
-                      ) : (
-                        skills.map((skill, index) => (
-                          <div
-                            key={index}
-                            className="px-[30px] py-[15px] bg-blue-500 bg-opacity-20 rounded-[10px] justify-center items-center gap-2.5 flex"
-                          >
-                            <div className="text-blue-500 text-[15px] font-normal font-['Manrope']">
-                              {skill}
-                            </div>
-                          </div>
-                        ))
-                      )}
-                    </div>
-                    <form onSubmit={handleSkills}>
-                      <input
-                        placeholder="Добавить навык"
-                        value={inputValue}
-                        onChange={handleChangeSkills}
-                        className="px-[30px] py-[15px] rounded-[10px] border border-blue-500 justify-center items-center gap-2.5 flex"
-                      />
-                    </form>
+                  <select
+                    name="faculty"
+                    value={formData.faculty}
+                    onChange={handleChange}
+                    className="self-stretch w-[100%] px-5 py-[15px] bg-slate-50 rounded-[10px] border border-neutral-400 justify-start items-center gap-2.5 inline-flex"
+                  >
+                    <option value="">Выберите направление</option>
+
+                    <option>ЧГУ</option>
+                    <option>ГГНТУ</option>
+                    <option>ЧГПУ</option>
+                  </select>
+                  <div className="self-stretch mt-3 text-black text-xl font-semibold font-['Manrope']">
+                    Направление
                   </div>
+                  <select
+                    name="direction"
+                    value={formData.direction}
+                    onChange={handleChange}
+                    className="self-stretch w-[100%] px-5 py-[15px] bg-slate-50 rounded-[10px] border border-neutral-400 justify-start items-center gap-2.5 inline-flex"
+                  >
+                    <option value="">Выберите направление</option>
+                    {options.map((option, index) => (
+                      <option key={index} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
                 </div>
+                <button
+                  onClick={handleSubmit}
+                  className="self-stretch px-[30px] mt-4 py-[15px] bg-teal-700  rounded-[10px] justify-center items-center gap-2.5 inline-flex"
+                >
+                  <div className="text-white text-[15px] font-normal font-['Manrope']">
+                    Сохранить
+                  </div>
+                </button>
               </div>
-              <button
-                onClick={handleSubmit}
-                className="self-stretch px-[30px] mt-[4%] py-[15px] bg-blue-500 rounded-[10px] justify-center items-center gap-2.5 inline-flex"
-              >
-                <div className="text-white text-[15px] font-normal font-['Manrope']">
-                  Добавить студента
-                </div>
-              </button>
             </div>
           </div>
         </div>

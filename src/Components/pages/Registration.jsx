@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import NavbarAuth from '../NavbarAuth';
 
 function Registration({ setAddModal }) {
+  const baseUrl = process.env.BASE_URL;
   const [formData, setFormData] = useState({
     email: '',
     name: '',
@@ -25,7 +26,8 @@ function Registration({ setAddModal }) {
     e.preventDefault();
 
     try {
-      const response = await fetch(`http://localhost:4000/auth/registration`, {
+      // Отправляем первый запрос на http://localhost:4007/auth/registration
+      const response1 = await fetch(`http://localhost:4007/auth/registration`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -37,18 +39,39 @@ function Registration({ setAddModal }) {
           status: status,
         }),
       });
-      if (!response.ok) {
-        const errorData = await response.json();
+
+      // Проверяем успешность первого запроса
+      if (!response1.ok) {
+        const errorData = await response1.json();
         throw new Error(errorData.message);
       }
 
-      const data = await response.json();
-      const token = data.token;
-      const userId = data.userId;
-      navigate('/profile');
+      // Получаем данные из первого запроса
+      const data1 = await response1.json();
+      const token = data1.token;
+      const userId = data1.userId;
 
-      localStorage.setItem('token', token);
-      localStorage.setItem('userId', userId);
+      // Отправляем второй запрос на http://localhost:4001/api/auth/register
+      const response2 = await fetch(`http://localhost:4001/api/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+          username: formData.name,
+        }),
+      });
+
+      // Проверяем успешность второго запроса
+      if (!response2.ok) {
+        const errorData = await response2.json();
+        throw new Error(errorData.message);
+      }
+
+      // В случае успешного выполнения обоих запросов, перенаправляем пользователя
+      navigate('/auth');
     } catch (error) {
       console.error('Ошибка при отправке запроса:', error.message);
     }
@@ -59,7 +82,7 @@ function Registration({ setAddModal }) {
       <NavbarAuth />
       <div className="h-[100%] w-[100%]  flex justify-center items-center  ">
         <div className="relative w-full ">
-          <div className="max-w-[560px] cont-reg  h-[750px] my-5 p-[30px] mx-8 rounded-[15px] border border-teal-700 flex-col gap-5 inline-flex flex-shrink">
+          <div className="max-w-[560px] cont-reg  h-[750px] my-8 p-[30px] mx-8 rounded-[15px] border border-teal-700 flex-col gap-5 inline-flex flex-shrink">
             <div class="flex-col justify-start items-start gap-5 flex">
               <div class="max-w-[100%] cont-reg1  justify-start items-start gap-5 inline-flex">
                 <div class="grow shrink basis-0 flex-col justify-start items-start gap-2.5 inline-flex">
@@ -145,6 +168,7 @@ function Registration({ setAddModal }) {
                 <input
                   placeholder="Введите пароль"
                   name="password"
+                  type="password"
                   onChange={handleChange}
                   value={formData.password}
                   class="w-[501px] inputmob px-5 py-[15px] bg-gray-50 rounded-[10px] border border-zinc-400 justify-start items-center gap-2.5 inline-flex"

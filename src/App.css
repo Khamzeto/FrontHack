@@ -125,7 +125,10 @@
   .auth-nav {
     display: flex;
     width: 60px;
-    padding: 10px;
+
+    padding-top: 12px;
+    padding-left: 10px;
+    padding-right: 10px;
     justify-content: center;
     align-items: center;
     gap: 10px;
@@ -133,7 +136,10 @@
   .reg-nav {
     display: flex;
     width: 120px;
-    padding: 10px;
+
+    padding-top: 13px;
+    padding-left: 10px;
+    padding-right: 10px;
     justify-content: center;
     align-items: center;
     gap: 10px;
@@ -167,7 +173,7 @@
     margin-left: 5%;
   }
   .noacc {
-    width: 150%;
+    width: 100%;
   }
   .cont-reg {
     max-width: 80%;
@@ -186,5 +192,11 @@
   }
   .accept {
     font-size: 60%;
+  }
+  .note {
+    display: block !important;
+  }
+  .notMob {
+    display: none;
   }
 }

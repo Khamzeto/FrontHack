@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import NavbarAuth from '../NavbarAuth';
 
 function AuthPage({ setAddModal }) {
+  const baseUrl = process.env.BASE_URL;
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -17,7 +18,7 @@ function AuthPage({ setAddModal }) {
     e.preventDefault();
 
     try {
-      const response = await fetch(`http://localhost:4000/auth/login`, {
+      const response = await fetch(`http://localhost:4007/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -35,7 +36,7 @@ function AuthPage({ setAddModal }) {
       const data = await response.json();
       const token = data.token;
       const userId = data.userId;
-      navigate('/profile');
+      navigate('/');
 
       localStorage.setItem('token', token);
       localStorage.setItem('userId', userId);
@@ -91,6 +92,7 @@ function AuthPage({ setAddModal }) {
                 </div>
                 <input
                   placeholder="Введите пароль"
+                  type="password"
                   name="password"
                   onChange={handleChange}
                   value={formData.password}
@@ -106,7 +108,7 @@ function AuthPage({ setAddModal }) {
               class="w-[501px] noacc px-5 py-[15px] bg-teal-700 rounded-[10px] justify-center items-center gap-2.5 inline-flex"
             >
               <div class="text-center text-white text-[15px] font-normal font-['Manrope'] leading-[17.25px]">
-                Создать аккаунт
+                Войти
               </div>
             </button>
           </div>
